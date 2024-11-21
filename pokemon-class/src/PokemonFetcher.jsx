@@ -9,7 +9,7 @@ export default class PokemonFetcher extends Component {
 
         this.state = {
             pokemonList: [],
-            fightReady: 0
+            jwtToken: null
         }
     }
 
@@ -35,13 +35,23 @@ export default class PokemonFetcher extends Component {
         console.log("Pokemon Fetcher First Load");
     }
 
+    componentDidUpdate() {
+        console.log("Page rendered. This is the current state:", this.state.pokemonList);
+
+        if (this.state.jwtToken) {
+            console.log("User is logged in.")
+        } else {
+            console.log("User is logged out.")
+        }
+    }
+
     render() {
         return (
             <div>
                 <h1>Pokemon Fetcher</h1>
                 {
-                    this.state.pokemonList.map(pokemon => {
-                        return <PokemonCard name={pokemon} />
+                    this.state.pokemonList.map((pokemon, index) => {
+                        return <PokemonCard key={pokemon + index} name={pokemon} />
                     })
                 }
                 <button onClick={() =>
