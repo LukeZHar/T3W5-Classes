@@ -8,21 +8,31 @@ export default class PokemonFetcher extends Component {
         super(props);
 
         this.state = {
-            pokemonList: []
+            pokemonList: [],
+            fightReady: 0
         }
     }
 
     async componentDidMount() {
-        // Generate random pokemon ID number
-        let randomNum = Math.ceil(Math.random() * 1025);
-        // Pass random pokemon number to fetch
-        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomNum}`);
-        let data = await response.json();
-        //  Set fetch response to state
-        this.setState({
-            pokemonList: [data]
-        });
-        console.log("Pokemon Fetcher Mounted");
+        for (let i = 0; i < 6; i++) {
+            // Generate random pokemon ID number
+            let randomNum = Math.ceil(Math.random() * 1025);
+            // Pass random pokemon number to fetch
+            let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomNum}`);
+            let data = await response.json();
+            //  Set fetch response to state
+            // Method 1:
+            // this.setState({
+            //     pokemonList: [...this.state.pokemonList, data.name]
+            // });
+            // Method 2:
+            this.setState((prevState) => {
+                return {
+                    pokemonList: [...prevState.pokemonList, data.name]
+                }
+            })
+        }
+        console.log("Pokemon Fetcher First Load");
     }
 
     render() {
@@ -31,7 +41,7 @@ export default class PokemonFetcher extends Component {
                 <h1>Pokemon Fetcher</h1>
                 {
                     this.state.pokemonList.map(pokemon => {
-                        return <PokemonCard name={pokemon.name} />
+                        return <PokemonCard name={pokemon} />
                     })
                 }
                 <button onClick={() =>
